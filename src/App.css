@@ -1,4 +1,11 @@
-.App {
+body, html {
+  position: relative;
+  height: 90vh;
+  width: 95vw;
+  margin: 12px;
+}
+
+h1 {
   text-align: center;
 }
 
