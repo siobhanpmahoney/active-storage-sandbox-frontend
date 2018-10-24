@@ -37,6 +37,16 @@ button {
   border-radius: 10px;
 }
 
+input[type="text"] {
+  margin: 0px 6px;
+  padding: 3px;
+}
+
+.editForm {
+  background: white;
+  border: 1.5px solid #346EFF;
+}
+
 
 
 .dropZone-section {

@@ -5,7 +5,7 @@ import Dropzone from 'react-dropzone'
 
 
 class App extends Component {
-
+  
   constructor(props) {
     super(props)
 
@@ -102,40 +102,42 @@ class App extends Component {
         }
 
         {!!this.state.isEditing &&
-          <div className="editForm" style={{background:"white",  border: "1.5px solid #346EFF"}}>
+          <div className="editForm">
             <form>
               <label> Username:
-                <input onChange={this.onFieldEdit} style={{margin:"0px 6px", padding:"3px"}} type="text" name="username" value={this.state.userSelectedForEdits.username} />
+                <input onChange={this.onFieldEdit} type="text" name="username" value={this.state.userSelectedForEdits.username} />
               </label>
 
               <label> Location:
-                <input onChange={this.onFieldEdit} style={{margin:"0px 6px", padding:"3px"}} type="text" name="location" value={this.state.userSelectedForEdits.location} />
+                <input onChange={this.onFieldEdit} type="text" name="location" value={this.state.userSelectedForEdits.location} />
               </label>
 
 
 
-<div className="drop-zone-section">
-              <label> Avatar:
-                <div className="drop-area">
-                <Dropzone onDrop={this.onDrop.bind(this)}>
-                  <p>Drop Files Here</p>
-                </Dropzone>
-                </div>
+              <div className="drop-zone-section">
+                <label> Avatar:
+                  <div className="drop-area">
+                    <Dropzone onDrop={this.onDrop.bind(this)}>
+                      <p>Drop Files Here</p>
+                    </Dropzone>
+                  </div>
 
-{this.state.files.length > 0 &&
-  <div className="drop-list">
-    {this.state.files.map((item) => {
-      return <div className="file-item" key={item[0].name}>{item[0].name}</div>
-    })}
-  </div>
-}
+                  {this.state.files.length > 0 &&
+                    <div className="drop-list">
+                      {this.state.files.map((item) => {
+                        return <div className="file-item" key={item[0].name}>{item[0].name}</div>
+                      })}
+                    </div>
+                  }
 
-              </label>
+                </label>
 
               </div>
             </form>
 
-            <button onClick={this.onSubmitEdits}>submit</button>
+            <button onClick={this.onSubmitEdits}>
+              submit
+            </button>
           </div>
         }
 
