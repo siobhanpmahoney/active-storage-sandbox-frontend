@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Dropzone from 'react-dropzone'
+
 
 class App extends Component {
 
@@ -11,6 +13,7 @@ class App extends Component {
       users: [],
       isEditing: false,
       userSelectedForEdits: null,
+      files: []
     }
   }
 
@@ -22,8 +25,15 @@ class App extends Component {
     }))
   }
 
-  onSelectEdit = (event) => {
+  onDrop = (f) => {
+    debugger
+    let updatedFiles = [...this.state.files, f]
+    this.setState({
+      files: updatedFiles
+    })
+  }
 
+  onSelectEdit = (event) => {
     let u = this.state.users.find((user) => user.id == event.target.id)
     this.setState({
       isEditing: true,
@@ -40,10 +50,6 @@ class App extends Component {
       userSelectedForEdits: formState
     })
   }
-
-
-
-
 
   onSubmitEdits = (event) => {
     event.preventDefault()
@@ -77,43 +83,65 @@ class App extends Component {
     })
   }
 
-render() {
-  return (
-    <div className="App">
-      <h1>Users</h1>
-      {this.state.users.length > 0 &&
-        <ul>
-          {this.state.users.map((user) => {
-            return <div>
-              <li>{user.username}, {user.location}
-                <span className="button">
-                  <button id={user.id} onClick={this.onSelectEdit}>Edit</button>
-                </span>
-              </li>
-            </div>
-          })}
-        </ul>
-      }
+  render() {
+    return (
+      <div className="App">
+        <h1>Users</h1>
+        {this.state.users.length > 0 &&
+          <ul>
+            {this.state.users.map((user) => {
+              return <div>
+                <li>{user.username}, {user.location}
+                  <span className="button">
+                    <button id={user.id} onClick={this.onSelectEdit}>Edit</button>
+                  </span>
+                </li>
+              </div>
+            })}
+          </ul>
+        }
 
-      {!!this.state.isEditing &&
-        <div className="editForm" style={{background:"white",  border: "1.5px solid #346EFF"}}>
-          <form style={{background: "#346EFF", padding: "16px", border: "1.5px solid #346EFF", fontSize:"80%", display:"flex", flexFlow:"nowrap row", justifyContent:"space-around", color:"white"}}>
-            <label> Username:
-              <input onChange={this.onFieldEdit} style={{margin:"0px 6px", padding:"3px"}} type="text" name="username" value={this.state.userSelectedForEdits.username} />
-            </label>
+        {!!this.state.isEditing &&
+          <div className="editForm" style={{background:"white",  border: "1.5px solid #346EFF"}}>
+            <form>
+              <label> Username:
+                <input onChange={this.onFieldEdit} style={{margin:"0px 6px", padding:"3px"}} type="text" name="username" value={this.state.userSelectedForEdits.username} />
+              </label>
 
-            <label> Location:
-              <input onChange={this.onFieldEdit} style={{margin:"0px 6px", padding:"3px"}} type="text" name="location" value={this.state.userSelectedForEdits.location} />
-            </label>
-          </form>
+              <label> Location:
+                <input onChange={this.onFieldEdit} style={{margin:"0px 6px", padding:"3px"}} type="text" name="location" value={this.state.userSelectedForEdits.location} />
+              </label>
 
-          <button style={{borderColor:"#346EFF", color: "#346EFF", margin:"12px", padding: "6px", borderRadius:"10px"}} onClick={this.onSubmitEdits}>submit</button>
-        </div>
-      }
 
-    </div>
-  );
+
+<div className="drop-zone-section">
+              <label> Avatar:
+                <div className="drop-area">
+                <Dropzone onDrop={this.onDrop.bind(this)}>
+                  <p>Drop Files Here</p>
+                </Dropzone>
+                </div>
+
+{this.state.files.length > 0 &&
+  <div className="drop-list">
+    {this.state.files.map((item) => {
+      return <div className="file-item" key={item[0].name}>{item[0].name}</div>
+    })}
+  </div>
 }
+
+              </label>
+
+              </div>
+            </form>
+
+            <button onClick={this.onSubmitEdits}>submit</button>
+          </div>
+        }
+
+      </div>
+    );
+  }
 }
 
 export default App;

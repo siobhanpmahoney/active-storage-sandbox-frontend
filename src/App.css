@@ -29,6 +29,33 @@ h1 {
   color: #61dafb;
 }
 
+button {
+  border-color: #346EFF;
+  color: #346EFF;
+  margin:12px;
+  padding: 6px;
+  border-radius: 10px;
+}
+
+
+
+.dropZone-section {
+  display: flex;
+  flex-flow: wrap column;
+  flex: 1 1 auto;
+}
+
+form {
+  background: #346EFF;
+  padding: 16px;
+  border: 1.5px solid #346EFF;
+  font-size: 80%;
+  display: flex;
+  flex-flow: nowrap row;
+  justify-content:space-around;
+  color: white;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
