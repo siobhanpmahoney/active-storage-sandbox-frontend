@@ -1066,7 +1066,7 @@ acorn@^6.0.1, acorn@^6.0.2:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.0.2.tgz#6a459041c320ab17592c6317abbfdf4bbaa98ca4"
   integrity sha512-GXmKIvbrN3TV7aVqAzVFaMW8F8wzVX7voEBRO3bDA64+EX37YSayggRJP5Xig6HYHBkWKpFg9W5gg6orklubhg==
 
-activestorage@^5.2.0:
+activestorage@^5.2.0, activestorage@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/activestorage/-/activestorage-5.2.1.tgz#b4be57fbedc25c6c361802707fc5e8884766f6a1"
   integrity sha512-n3LcwiC3EV5zkVAvay5yprXTBb8vzT2Qef1GCfC8feJTVWEadzNW9zYaOweDpshqzJHx+zdaps6uiHDJQbdCdA==
@@ -3665,6 +3665,13 @@ file-loader@2.0.0:
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^1.0.0"
+
+file-selector@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.1.5.tgz#2ac3fed734b44c89646cdf8c088842ea53a6814a"
+  integrity sha512-ZyfPlFPvwQAnZ/xoIbwALTUYxoP1eE5X3E90H48NNrKkxT0bX1WMnMgRha8sTDjgsx1gHS2c5ndQYj0ojNuZnA==
+  dependencies:
+    tslib "^1.9.0"
 
 filename-regex@^2.0.0:
   version "2.0.1"

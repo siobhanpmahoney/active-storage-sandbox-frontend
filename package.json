@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "activestorage": "^5.2.1",
+    "file-selector": "^0.1.5",
     "react": "^16.5.2",
     "react-activestorage-provider": "^0.4.0",
     "react-dom": "^16.5.2",
