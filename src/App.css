@@ -61,9 +61,21 @@ form {
   border: 1.5px solid #346EFF;
   font-size: 80%;
   display: flex;
-  flex-flow: nowrap row;
+  flex-flow: nowrap column;
   justify-content:space-around;
   color: white;
+}
+
+label {
+    margin: 12px 12px 12px 2px;
+}
+
+input[type="file"], input[type="text"] {
+  padding: 4px 3px;
+  margin: 3px 2px 3px 12px;
+  border-radius: 4px;
+  border: solid 0.25px #333;
+
 }
 
 @keyframes App-logo-spin {
@@ -73,4 +85,9 @@ form {
   to {
     transform: rotate(360deg);
   }
+}
+
+.fakePreview {
+  padding: 12px;
+  margin: 12px;
 }
