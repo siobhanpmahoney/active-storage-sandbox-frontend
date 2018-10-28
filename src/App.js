@@ -157,7 +157,7 @@ class App extends Component {
   }
 
   _grabFiles = (event) => {
-    // event.preventDefault()
+    event.preventDefault()
     // let fileUploadState = this.state.fileUploads.splice(0)
     // fileUploadState = [
     //   ...fileUploadState,
@@ -169,12 +169,19 @@ class App extends Component {
     const file = this.fileInput.current.files[0]
     const reader  = new FileReader();
 
+    let fileUploadState = this.state.fileUploads.splice(0)
+    fileUploadState = [
+      ...fileUploadState,
+      ...this.fileInput.current.files
+    ]
+
     reader.onloadend = () => {
       this.setState({
         imgUrl: reader.result,
         imgName: file.name,
-        imgLoaded: true
-      }, () => console.log("resulting url saved in state: ", this.state.imgUrl))
+        imgLoaded: true,
+        files: fileUploadState
+      }, () => console.log("resulting url saved in state: ", this.state))
     }
     if (file) {
       reader.readAsDataURL(file);
@@ -182,7 +189,7 @@ class App extends Component {
       this.setState({
         imgUrl :reader.result,
         imgName: file.name
-      })
+      }, () => console.log("this is state: ", this.state))
     }
     else {
       this.setState({
@@ -200,7 +207,8 @@ class App extends Component {
     formdata.append('location', userUpdates['location'])
 
     formdata.append('id', userUpdates['id'])
-    console.log("formdata", formdata)
+    formdata.append('avatar', this.state.files[0])
+    formdata.append('avatar_title', this.state.imgName)
     // Object.entries(userUpdates).forEach((entry) => {
     //   if (entry[1] != null) {
     //   console.log(entry)
@@ -209,10 +217,10 @@ class App extends Component {
     //   return formdata.append(entry[0], entry[1])
     // }
     // })
-
-
-
-
+    //
+    //
+    //
+    //
     // if (this.state.files.length > 0) {
     //     userUpdates['avatar'] = this.state.files[0]
     // }
@@ -255,7 +263,7 @@ class App extends Component {
               <label> Location:</label>
                 <input onChange={this.onFieldEdit} type="text" name="location" value={this.state.userSelectedForEdits.location} />
 
-{/*
+
               <div>
 
                 <label> File Upload
@@ -271,7 +279,7 @@ class App extends Component {
 
 
               </div>
-*/}
+
               <div className="fakePreview">
                 <button type="submit">Fake Submit</button>
               </div>
