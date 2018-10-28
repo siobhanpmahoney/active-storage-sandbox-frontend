@@ -18,10 +18,8 @@ class App extends Component {
       isEditing: false,
       userSelectedForEdits: null,
       files: [],
-      fileUploads: [],
       imgUrl: null,
       imgName: null,
-      imgLoaded: false
     }
     this.grabFiles = this._grabFiles.bind(this)
     this.fileInput = React.createRef();
@@ -36,7 +34,7 @@ class App extends Component {
   }
 
   onDrop = (f) => {
-    console.log("f", f)
+
     // const im = new Image()
     // im.onload = () => {
     //   const reader = new FileReader()
@@ -47,15 +45,8 @@ class App extends Component {
     //
 
 
-
-    //
-    // console.log(f)
-    // debugger
     const promise = new Promise((resolve, reject) => {
       const reader = new FileReader()
-      console.log("reader: ", reader)
-
-
       reader.onload = () => {
         if (!!reader.result) {
           resolve(reader.result)
@@ -89,7 +80,6 @@ class App extends Component {
 
     let selectedUser = this.state.userSelectedForEdits
     promise.then(result => {
-      console.log("result: ", result)
       selectedUser['avatar'] = {data_url: result, title: f[0].name}
       this.setState({
         files: f,
@@ -127,8 +117,6 @@ class App extends Component {
     // if (this.state.files.length > 0) {
     //     userUpdates['avatar'] = this.state.files[0]
     // }
-    console.log("in submit", userUpdates)
-
     fetch(`http://localhost:3000/api/v1/users/${userUpdates.id}`, {
       method: 'PATCH',
       headers: {
@@ -142,6 +130,7 @@ class App extends Component {
   }
 
   helperFindAndSplice = (u) => {
+    console.log("in find-and-splice: ", u)
     let idx = this.state.users.indexOf(this.state.users.find((k) => k.id == u.id))
     let updatedUserState = this.state.users.splice(0)
     updatedUserState = [
@@ -158,37 +147,37 @@ class App extends Component {
 
   _grabFiles = (event) => {
     event.preventDefault()
-    // let fileUploadState = this.state.fileUploads.splice(0)
-    // fileUploadState = [
-    //   ...fileUploadState,
-    //   ...this.fileInput.current.files
-    // ]
-    //
-    // debugger
-    // console.log("hi")
     const file = this.fileInput.current.files[0]
     const reader  = new FileReader();
 
-    let fileUploadState = this.state.fileUploads.splice(0)
+    let fileUploadState = this.state.files.splice(0)
     fileUploadState = [
       ...fileUploadState,
       ...this.fileInput.current.files
     ]
 
+
     reader.onloadend = () => {
+    let userSelectedForEditsState = this.state.userSelectedForEdits
+    userSelectedForEditsState["avatar"] = reader.result
+
+
       this.setState({
         imgUrl: reader.result,
         imgName: file.name,
-        imgLoaded: true,
-        files: fileUploadState
+        files: fileUploadState,
+        userSelectedForEdits: userSelectedForEditsState
       }, () => console.log("resulting url saved in state: ", this.state))
     }
     if (file) {
       reader.readAsDataURL(file);
-      console.log("in if file, file: ", file)
+      let userSelectedForEditsState = this.state.userSelectedForEdits
+      userSelectedForEditsState["avatar"] = reader.result
       this.setState({
         imgUrl :reader.result,
-        imgName: file.name
+        imgName: file.name,
+        files: fileUploadState,
+        userSelectedForEdits: userSelectedForEditsState
       }, () => console.log("this is state: ", this.state))
     }
     else {
@@ -224,7 +213,6 @@ class App extends Component {
     // if (this.state.files.length > 0) {
     //     userUpdates['avatar'] = this.state.files[0]
     // }
-    console.log("in submit", formdata)
 
     fetch(`http://localhost:3000/api/v1/users/${userUpdates.id}`, {
       method: 'PATCH',
@@ -243,7 +231,8 @@ class App extends Component {
           <ul>
             {this.state.users.map((user) => {
               return <div>
-                <li>{user.username}, {user.location}
+                <li>
+                  {user.username}, {user.location}
                   <span className="button">
                     <button id={user.id} onClick={this.onSelectEdit}>Edit</button>
                   </span>
@@ -257,22 +246,22 @@ class App extends Component {
           <div className="editForm">
             <form name="user" onSubmit={this.onSubmit2}>
               <label> Username: </label>
-                <input onChange={this.onFieldEdit} type="text" name="username" value={this.state.userSelectedForEdits.username} />
+              <input onChange={this.onFieldEdit} type="text" name="username" value={this.state.userSelectedForEdits.username} />
 
 
               <label> Location:</label>
-                <input onChange={this.onFieldEdit} type="text" name="location" value={this.state.userSelectedForEdits.location} />
+              <input onChange={this.onFieldEdit} type="text" name="location" value={this.state.userSelectedForEdits.location} />
 
 
               <div>
 
                 <label> File Upload
-                  <input type="file" accept="image/png, image/jpeg" ref={this.fileInput} multiple onChange={this.grabFiles}>
+                  <input type="file" accept="image/png, image/jpeg" ref={this.fileInput} onChange={this.grabFiles}>
                   </input>
                 </label>
-                {!!this.state.imgLoaded &&
+                {!!this.state.userSelectedForEdits.avatar &&
                   <div className="fakePreview">
-                    <img src={this.state.imgUrl} height="100"/>
+                    <img src={this.state.userSelectedForEdits.avatar} height="100"/>
                   </div>
                 }
 
@@ -286,32 +275,32 @@ class App extends Component {
             </form>
 
 
-              {/*
-                <div className="drop-zone-section">
-                <label> Avatar:
-                <div className="drop-area">
-                <Dropzone onDrop={this.onDrop.bind(this)} getDataTransferItems={evt => fromEvent(evt)} inputProps={{accept: "image/png, image/jpeg"}}>
-                {this.state.files.length > 0 ? (
-                <img src={this.state.files[0].preview} width="200px"/>
-                ) : (
-                <p>Drop Files Here</p>
-                )
-                }
-                </Dropzone>
-                </div>
+            {/*
+              <div className="drop-zone-section">
+              <label> Avatar:
+              <div className="drop-area">
+              <Dropzone onDrop={this.onDrop.bind(this)} getDataTransferItems={evt => fromEvent(evt)} inputProps={{accept: "image/png, image/jpeg"}}>
+              {this.state.files.length > 0 ? (
+              <img src={this.state.files[0].preview} width="200px"/>
+              ) : (
+              <p>Drop Files Here</p>
+              )
+              }
+              </Dropzone>
+              </div>
 
-                {this.state.files.length > 0 &&
-                <div className="drop-list">
-                {this.state.files.map((item) => {
-                return <div className="file-item" key={item.name}>{item.name}</div>
-                })}
-                </div>
-                }
+              {this.state.files.length > 0 &&
+              <div className="drop-list">
+              {this.state.files.map((item) => {
+              return <div className="file-item" key={item.name}>{item.name}</div>
+              })}
+              </div>
+              }
 
-                </label>
+              </label>
 
-                </div>
-                */}
+              </div>
+              */}
 
 
 
