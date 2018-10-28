@@ -141,7 +141,8 @@ class App extends Component {
     this.setState({
       users: updatedUserState,
       isEditing: false,
-      userSelectedForEdits: null
+      userSelectedForEdits: u,
+      imgUrl: u.avatar
     })
   }
 
