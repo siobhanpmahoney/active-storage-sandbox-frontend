@@ -20,6 +20,7 @@ class App extends Component {
       files: [],
       imgUrl: null,
       imgName: null,
+      imgRotation: 0
     }
     this.grabFiles = this._grabFiles.bind(this)
     this.fileInput = React.createRef();
@@ -88,16 +89,15 @@ class App extends Component {
     }, err => {
       console.log(err)
     })
-
-
-
   }
 
   onSelectEdit = (event) => {
     let u = this.state.users.find((user) => user.id == event.target.id)
+
     this.setState({
       isEditing: true,
-      userSelectedForEdits: u
+      userSelectedForEdits: u,
+      imgRotation: 0
     }, () => console.log("selected user: ", this.state.userSelectedForEdits))
   }
 
@@ -152,15 +152,12 @@ class App extends Component {
     const reader  = new FileReader();
 
     let fileUploadState = this.state.files.splice(0)
-    fileUploadState = [
-      ...fileUploadState,
-      ...this.fileInput.current.files
-    ]
-
+    // fileUploadState = [...fileUploadState, ...this.fileInput.current.files]
+    fileUploadState = [...this.fileInput.current.files]
 
     reader.onloadend = () => {
-    let userSelectedForEditsState = this.state.userSelectedForEdits
-    userSelectedForEditsState["avatar"] = reader.result
+      let userSelectedForEditsState = this.state.userSelectedForEdits
+      userSelectedForEditsState["avatar"] = reader.result
 
 
       this.setState({
@@ -180,24 +177,44 @@ class App extends Component {
         files: fileUploadState,
         userSelectedForEdits: userSelectedForEditsState
       }, () => console.log("this is state: ", this.state))
-    }
-    else {
+    } else {
       this.setState({
         imgUrl: ""
       })
     }
   }
 
+  onRotate = (event) => {
+    event.preventDefault()
+    let newRotation = this.state.imgRotation + 90;
+    if(newRotation >= 360){
+      newRotation =- 360;
+    }
+    this.setState({
+      imgRotation: newRotation,
+    })
+  }
+
+  onRotateLeft = (event) => {
+    event.preventDefault()
+    let newRotation = this.state.imgRotation - 90;
+    if(newRotation >= 360){
+      newRotation =- 360;
+    }
+    this.setState({
+      imgRotation: newRotation,
+    })
+  }
+
   onSubmit2 = (event) => {
     event.preventDefault()
-
     let userUpdates = this.state.userSelectedForEdits
     let formdata = new FormData()
     formdata.append('username', userUpdates['username'])
     formdata.append('location', userUpdates['location'])
-
     formdata.append('id', userUpdates['id'])
     formdata.append('avatar', this.state.files[0])
+    // formdata.append('avatar', this.state.files[0])
     formdata.append('avatar_title', this.state.imgName)
     // Object.entries(userUpdates).forEach((entry) => {
     //   if (entry[1] != null) {
@@ -207,10 +224,6 @@ class App extends Component {
     //   return formdata.append(entry[0], entry[1])
     // }
     // })
-    //
-    //
-    //
-    //
     // if (this.state.files.length > 0) {
     //     userUpdates['avatar'] = this.state.files[0]
     // }
@@ -262,7 +275,12 @@ class App extends Component {
                 </label>
                 {!!this.state.userSelectedForEdits.avatar &&
                   <div className="fakePreview">
-                    <img src={this.state.userSelectedForEdits.avatar} height="100"/>
+                    <img style={{transform: `rotate(${this.state.imgRotation}deg)`}} src={this.state.userSelectedForEdits.avatar} height="100" width="auto"/>
+                    <div className="controls">
+                      <button onClick={this.onRotateLeft}>left</button>
+                      <button onClick={this.onRotate}>right</button>
+                      <button>x</button>
+                    </div>
                   </div>
                 }
 
